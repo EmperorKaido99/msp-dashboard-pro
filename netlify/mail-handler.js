@@ -1,4 +1,4 @@
-exports.handler = async (event, context) => {
+exports.handler = async (event) => {
   try {
     const data = JSON.parse(event.body);
 
@@ -6,12 +6,12 @@ exports.handler = async (event, context) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: "Data received successfully." })
+      body: JSON.stringify({ message: "Success", received: data }),
     };
-  } catch (error) {
+  } catch (err) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: error.toString() })
+      body: JSON.stringify({ error: err.message }),
     };
   }
 };
