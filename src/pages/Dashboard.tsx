@@ -1,8 +1,36 @@
 import { CalendarDays, AlertTriangle } from "lucide-react";
 import { StatCard } from "@/components/StatCard";
 import { AlertItem } from "@/components/AlertItem";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
+  const [apiResponse, setApiResponse] = useState<string>("");
+  const { toast } = useToast();
+
+  const testServerlessFunction = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('hello-world');
+      
+      if (error) throw error;
+      
+      setApiResponse(JSON.stringify(data, null, 2));
+      toast({
+        title: "Success!",
+        description: "Serverless function called successfully",
+      });
+    } catch (error) {
+      console.error('Error calling function:', error);
+      toast({
+        title: "Error",
+        description: "Failed to call serverless function",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="p-8">
       {/* Header */}
@@ -36,6 +64,19 @@ const Dashboard = () => {
           subtitle="Active projects"
           indicatorColor="orange"
         />
+      </div>
+
+      {/* API Test Section */}
+      <div className="bg-card border border-border rounded-lg p-6 mb-8">
+        <h2 className="text-xl font-semibold text-foreground mb-4">Test Serverless Function</h2>
+        <Button onClick={testServerlessFunction}>
+          Call Backend API
+        </Button>
+        {apiResponse && (
+          <pre className="mt-4 p-4 bg-muted rounded-lg text-sm overflow-auto">
+            {apiResponse}
+          </pre>
+        )}
       </div>
 
       {/* Priority Alerts */}

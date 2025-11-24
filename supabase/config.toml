@@ -1,0 +1,4 @@
+project_id = "mokhlojgamroxmdrizwu"
+
+[functions.hello-world]
+verify_jwt = false
